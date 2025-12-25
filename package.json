@@ -1,0 +1,8 @@
+{
+  "name": "eleq",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ]
+}
