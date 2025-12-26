@@ -1,10 +1,13 @@
-# Welcome, EleQ Contributor!
+# Welcome, EleQ Contributor
+
 [Setting Up the Development Environment](#setting-up-the-development-environment)
 
 [Installing Dependencies](#installing-dependencies)
 
 [Pull Requests](#pull-requests)
+
 ## Setting Up the Development Environment
+
 1. Fork the repository.
 2. In your terminal, run the `git clone` command with the forked repository's URL, e.g.
 
@@ -28,7 +31,26 @@
     git pull upstream development
     ```
 
-    On your next pull, use `git pull`. The `development` branch has now been set as the default branch to pull from.
+    To set your local `main` branch to track the company's `development` branch by default, run:
+
+    ```bash
+    git branch --set-upstream-to=upstream/development main
+    ```
+
+    Now when you run `git pull` on your main branch, it will automatically pull from `upstream/development` instead of `origin/main`. To verify it worked:
+
+    ```bash
+    git branch -vv
+    
+    # You should see something like:
+    # main abc1234 [upstream/development] Your commit message
+    ```
+
+    **Note**: This means:
+
+    `git pull` = pulls from company's `development` branch
+
+    `git push` = still pushes to your fork's `main` (origin/main)
 
 5. Run `git remote -v` to verify. You should see this.
 
@@ -48,38 +70,55 @@
 6. Run `npm install` from the root of your project to install already set up dependencies. Cheers! You're all set. Well done. 🎉
 
 ## Installing Dependencies
+
 This is a monorepo that uses `npm workspaces`. `npm workspaces` prevent dependency conflicts and duplicate installs. With this in mind, stick to the following rules when installing dependencies to avoid issues.
+
 ### Install dependencies ONLY from the root
-Never run `npm install` inside `frontend` or `backend` directly. 
+
+Never run `npm install` inside `frontend` or `backend` directly.
+
   ```bash
   ❌
   cd backend
   npm install express
   ```
+
   ```bash
   ❌
   cd frontend
   npm install next
   ```
+
 ### Adding new dependencies
+
 - To add a frontend dependency, do this:
+
     ```bash
     npm install axios --workspace frontend
     ```
+
 - To add a backend dependency, do this:
+
     ```bash
     npm install bcrypt --workspace backend
     ```
+
 ### Run scripts per workspace
+
 - Run frontend dev server
+
     ```bash
     npm run dev --workspace frontend
     ```
+
 - Run backend dev server
+
     ```bash
     npm run dev --workspace backend
     ```
+
 ### Here's A Summary of the Dependencies Rules (Now, You Have No Excuses)
+
 ❌ Running `npm install` inside subfolders
 
 ❌ Multiple lockfiles
@@ -87,7 +126,9 @@ Never run `npm install` inside `frontend` or `backend` directly.
 ❌ Installing deps without `--workspace`
 
 ❌ Forgetting `private: true` in root
+
 ## Pull Requests
+
 For a consistent PR pattern that is easy to understand, use the following convention for PR titles: `<type>: <brief description>`. Common types include:
 
 - **feat** — new feature
