@@ -1,14 +1,29 @@
 @import "tailwindcss";
 
-body {
-  font-family: var(--font-dm-sans), sans-serif;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-nunito), sans-serif;
+:root{
+  /* Colour System */
+  --colour-background: oklch(0.9127 0.0042 91.45);
+  --colour-primary: oklch(0.7706 0.146 1.46);
+  --colour-secondary: oklch(0.5146 0.1576 354.92);
+  --colour-tertiary: oklch(0.7865 0.0677 353.16);
+  --font-body: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Nunito', system-ui, -apple-system, sans-serif;
 }
+
+
+body {
+  background-color: var(--colour-background);
+  color: oklch(0.2987 0.1194 10.38);
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
