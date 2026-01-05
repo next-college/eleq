@@ -800,14 +800,13 @@ Add item to cart.
 
 **Error Responses:**
 
-| Status | Message |
-
-|--------|---------|
-| 400 | `Product ID is required` |
-| 400 | `Invalid quantity` |
-| 404 | `Product not found` |
-| 400 | `Product out of stock` |
-| 400 | `Requested quantity exceeds available stock` |
+| Status | Message                                      |
+|--------|----------------------------------------------|
+| 400    | `Product ID is required`                     |
+| 400    | `Invalid quantity`                           |
+| 400    | `Product not found`                          |
+| 400    | `Product out of stock`                       |
+| 400    | `Requested quantity exceeds available stock` |
 
 ---
 
@@ -877,10 +876,9 @@ Remove item from cart.
 
 **Error Responses:**
 
-| Status | Message |
-
-|--------|---------|
-| 404 | `Cart item not found` |
+| Status | Message               |
+|--------|-----------------------|
+| 404    | `Cart item not found` |
 
 ---
 
@@ -957,13 +955,12 @@ Process checkout and create order.
 
 **Error Responses:**
 
-| Status | Message |
-
-|--------|---------|
-| 400 | `Cart is empty` |
-| 400 | `Shipping address is required` |
-| 400 | `Product not available` |
-| 400 | `Insufficient stock for [product name]` |
+| Status | Message                                 |
+|--------|-----------------------------------------|
+| 400    | `Cart is empty`                         |
+| 400    | `Shipping is required`                  |
+| 400    | `Product not available`                 |
+| 400    | `Insufficient stock for [product name]` |
 
 ---
 
@@ -979,12 +976,11 @@ List user's orders.
 
 **Query Parameters:**
 
-| Parameter | Type | Description |
-
-|-----------|------|-------------|
-| `page` | number | Page number (default: 1) |
-| `limit` | number | Items per page (default: 10) |
-| `status` | string | Filter by order status |
+| Parameter | Type   | Description                 |
+|-----------|--------|-----------------------------|
+| `page`    | number | Page number (default:1)     |
+| `limit`   | number | Items per page (default:10) |
+| `status`  | string | Filter by order status      |
 
 **Success Response (200):**
 
@@ -1020,10 +1016,10 @@ Get single order details.
 **Auth Required:** Yes
 
 **Path Parameters:**
-| Parameter | Type | Description |
 
-|-----------|------|-------------|
-| `id` | string | Order ID |
+| Parameter | Type   | Description |
+|-----------|--------|-------------|
+| `id`      | string | Order ID    |
 
 **Success Response (200):**
 
@@ -1065,11 +1061,10 @@ Get single order details.
 
 **Error Responses:**
 
-| Status | Message |
-
-|--------|---------|
-| 404 | `Order not found` |
-| 403 | `Access denied` |
+| Status | Message           |
+|--------|-------------------|
+| 404    | `Order not found` |
+| 403    | `Access denied`   |
 
 ---
 
@@ -1085,13 +1080,12 @@ Get reviews for a product.
 
 **Query Parameters:**
 
-| Parameter | Type | Description |
-
-|-----------|------|-------------|
-| `productId` | string | Product ID (required) |
-| `page` | number | Page number (default: 1) |
-| `limit` | number | Items per page (default: 10) |
-| `sort` | string | Sort: `-createdAt`, `rating`, `-rating` |
+| Parameter   | Type   | Description                             |
+|-------------|--------|-----------------------------------------|
+| `productId` | string | Product ID (required)                   |
+| `page`      | number | Page number (default:1)                 |
+| `limit`     | number | Items per page (default:10)             |
+| `sort`      | string | Sort: `-createdAt`, `rating`, `-rating` |
 
 **Success Response (200):**
 
@@ -1168,14 +1162,13 @@ Create a review for a product.
 
 **Error Responses:**
 
-| Status | Message |
-
-|--------|---------|
-| 400 | `Product ID is required` |
-| 400 | `Rating must be between 1 and 5` |
-| 400 | `Comment is required` |
-| 404 | `Product not found` |
-| 409 | `You have already reviewed this product` |
+| Status | Message                                  |
+|--------|------------------------------------------|
+| 400    | `Product ID is required`                 |
+| 400    | `Rating must be between 1 and 5`         |
+| 400    | `Comment is required`                    |
+| 404    | `Product not found`                      |
+| 409    | `You have already reviewed this product` |
 
 ---
 
