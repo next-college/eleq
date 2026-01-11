@@ -14,3 +14,228 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
+// ============================================
+// USER MODEL
+// ============================================
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  email         String    @unique
+  password      String    // Hashed with bcrypt
+  fullName      String
+  phone         String?
+  address       Address?
+
+  // Auth
+  emailVerified Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  orders        Order[]
+  cart          CartItem[]
+  reviews       Review[]
+
+  @@map("users")
+}
+
+// Embedded document for address
+type Address {
+  street    String
+  city      String
+  state     String
+  zipCode   String
+  country   String
+}
+
+// ============================================
+// PRODUCT MODEL
+// ============================================
+model Product {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  slug          String    @unique  // URL-friendly name
+  description   String
+  price         Float
+  comparePrice  Float?    // Original price for showing discounts
+  imageUrl      String    // External URL for product image
+
+  // Categorization
+  category      Category  @relation(fields: [categoryId], references: [id])
+  categoryId    String    @db.ObjectId
+  brand         String
+
+  // Inventory
+  stock         Int       @default(0)
+  sku           String?   @unique
+
+  // Product details
+  specs         Json?     // Flexible specs: { "RAM": "16GB", "Storage": "512GB" }
+  tags          String[]
+  featured      Boolean   @default(false)
+
+  // Status
+  status        ProductStatus @default(ACTIVE)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  orderItems    OrderItem[]
+  cartItems     CartItem[]
+  reviews       Review[]
+
+  @@map("products")
+}
+
+enum ProductStatus {
+  ACTIVE
+  OUT_OF_STOCK
+  DISCONTINUED
+}
+
+// ============================================
+// CATEGORY MODEL
+// ============================================
+model Category {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name        String    @unique
+  slug        String    @unique
+  description String?
+
+  // Self-referencing for subcategories
+  parentId    String?   @db.ObjectId
+  parent      Category? @relation("SubCategories", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children    Category[] @relation("SubCategories")
+
+  products    Product[]
+
+  @@map("categories")
+}
+
+// ============================================
+// ORDER MODEL
+// ============================================
+model Order {
+  id              String      @id @default(auto()) @map("_id") @db.ObjectId
+  orderNumber     String      @unique  // Human-readable: "ELQ-2024-001234"
+
+  // Customer
+  user            User        @relation(fields: [userId], references: [id])
+  userId          String      @db.ObjectId
+
+  // Order details
+  items           OrderItem[]
+  subtotal        Float
+  tax             Float
+  shippingCost    Float
+  total           Float
+
+  // Shipping
+  shippingAddress Address
+
+  // Status tracking
+  status          OrderStatus @default(PENDING)
+  paymentStatus   PaymentStatus @default(PENDING)
+  paymentMethod   String?
+  paymentId       String?     // External payment reference (Stripe, PayPal)
+
+  // Timestamps
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  paidAt          DateTime?
+  shippedAt       DateTime?
+  deliveredAt     DateTime?
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+
+  order       Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId     String    @db.ObjectId
+
+  product     Product   @relation(fields: [productId], references: [id])
+  productId   String    @db.ObjectId
+
+  // Snapshot of product at time of order
+  productName String
+  price       Float
+  quantity    Int
+
+  @@map("order_items")
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+// ============================================
+// CART MODEL
+// ============================================
+model CartItem {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String    @db.ObjectId
+
+  product     Product   @relation(fields: [productId], references: [id])
+  productId   String    @db.ObjectId
+
+  quantity    Int       @default(1)
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([userId, productId])  // One cart entry per product per user
+  @@map("cart_items")
+}
+
+// ============================================
+// REVIEW MODEL
+// ============================================
+model Review {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String    @db.ObjectId
+
+  product     Product   @relation(fields: [productId], references: [id])
+  productId   String    @db.ObjectId
+
+  rating      Int       // 1-5 stars
+  title       String?
+  comment     String
+  verified    Boolean   @default(false)  // Verified purchase
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([userId, productId])  // One review per product per user
+  @@map("reviews")
+}
+
+// ============================================
+// SESSION MODEL (for auth)
+// ============================================
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+
+  @@map("sessions")
+}
