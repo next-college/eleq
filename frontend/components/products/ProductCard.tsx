@@ -92,11 +92,11 @@ export function ProductCard({ product, index, onQuickView }: ProductCardProps) {
         </h3>
         <div className="flex items-baseline gap-2">
           <span className="text-lg font-medium">
-            ${product.price.toFixed(2)}
+            ₦{product.price.toFixed(2)}
           </span>
           {product.comparePrice && product.comparePrice > product.price && (
             <span className="text-sm text-muted-foreground line-through">
-              ${product.comparePrice.toFixed(2)}
+              ₦{product.comparePrice.toFixed(2)}
             </span>
           )}
         </div>
