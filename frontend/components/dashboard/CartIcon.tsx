@@ -9,7 +9,7 @@ export function CartIcon() {
 
   return (
     <Link
-      href="/checkout"
+      href="/cart"
       className="relative p-2 hover:bg-muted rounded-full transition-colors"
     >
       <ShoppingCart className="size-5" />
